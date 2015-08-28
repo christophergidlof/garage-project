@@ -1,0 +1,111 @@
+﻿@model Garage.Models.FordonModelPagedList
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Fordon</h2>
+<hr />
+
+<p>
+    @Html.ActionLink("Add New Fordon", "Create", "Fordon", new { @class = "Default btn btn-default" })
+</p>
+
+@*Search form*@
+@using (Html.BeginForm("Index", "Fordon", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control2", @placeholder = "Ägare / Regnr" })
+        <select class="dropdown btn btn-default" name="typeFilter">
+            
+            
+            <option value="" style="display:none">
+                    Filter
+            </option>
+
+            <option>
+                    Alla
+            </option>
+
+            <option>
+                    Bil
+            </option>
+
+            <option>
+                    Buss
+            </option>
+
+            <option>
+                    MC
+            </option>
+
+        </select>
+        <input type="submit" value="sök" class="Default btn btn-default" />
+    </div>
+}
+
+@*Table with table header*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("FordonTyp", "Index", new { sortOrder = ViewBag.TypSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Färg", "Index", new { sortOrder = ViewBag.FärgSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Regnr", "Index", new { sortOrder = ViewBag.RegnrSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Märke", "Index", new { sortOrder = ViewBag.MärkeSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Modell", "Index", new { sortOrder = ViewBag.ModellSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Ägare", "Index", new { sortOrder = ViewBag.ÄgareSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Parkerad", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+    @*foreach loop out table data from model.list*@
+    @foreach (var item in Model.list)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fordontyp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Färg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Regnr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Märke)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Modell)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ägare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Parkerad)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>
+@*pagination*@
+<br />
+Page @(Model.list.PageCount < Model.list.PageNumber ? 0 : Model.list.PageNumber) of @Model.list.PageCount
+
+@Html.PagedListPager(Model.list, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

@@ -1,0 +1,57 @@
+﻿@model Garage.Models.MainModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+
+    <h1>Garage.com</h1>
+    
+    <div class="col-md-8">
+
+    <p class="lead">Garage parkerar och tar hand om din bil.</p>
+    <p>Gå in under Contact för att kontakta oss. Gå in under About för att läsa om oss</p>
+    
+    </div>
+
+    <div class="col-md-4">
+    
+            <h4 class="boterclass_text">Dom här bilarna har fått böter</h4>
+
+        <table class="boterclass">
+            @foreach (var item in Model.Fordon)
+            {
+                <tr>
+                    <td class="boterclass_td">
+                        @Html.DisplayFor(modelItem => item.Regnr)
+                    </td>
+                    <td class="boterclass_td">
+                        @Html.DisplayFor(modelItem => item.Parkerad.Date)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        @Html.ActionLink("Create News", "CreateNyhet", "Home", new { @class = "Default btn btn-default" })
+        <h1 class="text-center h1">News...</h1>
+    </div>
+</div>
+
+<div class="row">
+
+    @foreach (var item in Model.Nyhet)
+    {
+        <div class="col-md-4">
+            <h2>@Html.DisplayFor(i => item.Ämne)</h2>
+            <h4>@Html.DisplayFor(i => item.Skapad)</h4>
+            <p>@Html.DisplayFor(i => item.Innehåll)</p>
+        </div>
+    }
+</div>
