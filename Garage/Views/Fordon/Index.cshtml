@@ -40,6 +40,8 @@
 
         </select>
         <input type="submit" value="sök" class="Default btn btn-default" />
+       
+         @Html.ActionLink("Idag", "Index", new { idag = "true" }, new { @class = "Default btn btn-default" })
     </div>
 }
 

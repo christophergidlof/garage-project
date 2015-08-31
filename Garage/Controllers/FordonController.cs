@@ -18,7 +18,7 @@ namespace Garage.Controllers
         private Databas db = new Databas();
 
         // GET: FordonModels
-        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page, string typeFilter)
+        public ActionResult Index(string searchString, string sortOrder, string currentFilter, int? page, string typeFilter, string idag)
         {
 
 
@@ -41,33 +41,33 @@ namespace Garage.Controllers
             var bilar = from s in db.Fordon
                         select s;
 
-
-
-
-
             // SÖK
             if (!String.IsNullOrEmpty(searchString) || !String.IsNullOrEmpty(typeFilter))
             {
                 if (typeFilter != "Alla" && !String.IsNullOrEmpty(searchString))
                 {
                     bilar = bilar.Where(s =>
-                        s.Regnr.Contains(searchString)
-                        || s.Ägare.Contains(searchString)
-                        && s.Fordontyp.ToString().Contains(typeFilter));
+                        s.Regnr == searchString
+                        || s.Ägare == searchString
+                        && s.Fordontyp.ToString() == typeFilter);
                 }
                 else if (String.IsNullOrEmpty(typeFilter) || typeFilter == "Alla")
                 {
                     bilar = bilar.Where(s =>
-                    s.Regnr.Contains(searchString)
-                    || s.Ägare.Contains(searchString));
+                    s.Regnr == searchString
+                    || s.Ägare == searchString);
                 }
                 else
-                    bilar = bilar.Where(s => s.Fordontyp.ToString().Contains(typeFilter));
+                    bilar = bilar.Where(s => s.Fordontyp.ToString() == typeFilter);
             }
 
+            
 
-
-
+            if (idag == "true")
+            {
+                DateTime today = DateTime.Now;
+                bilar = bilar.Where(s => s.Parkerad.Year == today.Year && s.Parkerad.Month == today.Month && s.Parkerad.Day == today.Day);
+            }
 
             // SORTERING
             ViewBag.FärgSortParm = String.IsNullOrEmpty(sortOrder) ? "färg_desc" : "";
@@ -109,15 +109,15 @@ namespace Garage.Controllers
                 default:
                     bilar = bilar.OrderBy(s => s.Fordontyp).ThenBy(s => s.Parkerad);
                     break;
-            
+
             }
 
 
 
-            
-            int pageSize = 5; 
 
-            int pageNumber = (page ?? 1); 
+            int pageSize = 5;
+
+            int pageNumber = (page ?? 1);
 
             var model = new Garage.Models.FordonModelPagedList();
 
@@ -130,7 +130,7 @@ namespace Garage.Controllers
 
 
 
-//________________________________________________________________
+        //________________________________________________________________
 
 
 
